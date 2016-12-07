@@ -10,10 +10,14 @@ $config             = FALSE;
 $message            = FALSE;
 $loginPasswordError = FALSE;
 $userData           = array(
-  'name'        => '',
-  'firstName'   => '',
-  'description' => '',
-  'interests'   => ''
+  'title'     => '',
+  'name'      => '',
+  'firstName' => '',
+  'nickname'  => '',
+  'email'     => '',
+  'homepage'  => '',
+  'picture'   => '',
+  'phone'     => '',
 );
 
 // Log is saved into session.
@@ -49,13 +53,12 @@ if (file_exists($configFile)) {
     $userLogged = TRUE;
     // Form submitted.
     if (isset($_POST['editDataSubmit'])) {
-      $userData = array(
-        'firstName'   => $_POST['firstName'],
-        'name'        => $_POST['name'],
-        'description' => $_POST['description'],
-        'interests'   => $_POST['interests']
-      );
-      file_put_contents($dataFile, json_encode($userData, JSON_OBJECT_AS_ARRAY));
+      $saveData = array();
+      // Get posted fields regarding expected keys.
+      foreach ($userData as $key => $value) {
+        $saveData[$key] = isset($_POST[$key]) ? $_POST[$key] : '';
+      }
+      file_put_contents($dataFile, json_encode($saveData, JSON_OBJECT_AS_ARRAY));
       $message = 'Data updated.';
     }
   }
@@ -86,7 +89,28 @@ if (file_exists($dataFile)) {
 // Show data.
 if (isset($_GET['show'])) {
   if (file_exists($dataFile)) {
-    echo file_get_contents($dataFile);
+    print '<rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:admin="http://webns.net/mvcb/">
+      <foaf:PersonalProfileDocument rdf:about="">
+        <foaf:maker rdf:resource="#me"/>
+        <foaf:primaryTopic rdf:resource="#me"/>
+        <admin:generatorAgent rdf:resource="http://www.ldodds.com/foaf/foaf-a-matic"/>
+        <admin:errorReportsTo rdf:resource="mailto:leigh@ldodds.com"/>
+      </foaf:PersonalProfileDocument>
+      <foaf:Person rdf:ID="me">
+      <foaf:name>' . $userData['firstName'] . ' ' . $userData['name'] . '</foaf:name>
+      <foaf:title>' . $userData['title'] . '</foaf:title>
+      <foaf:givenname>' . $userData['firstName'] . '</foaf:givenname>
+      <foaf:family_name>' . $userData['name'] . '</foaf:family_name>
+      <foaf:nick>' . $userData['nickname'] . '</foaf:nick>
+      <foaf:mbox_sha1sum>' . sha1($userData['email']) . '</foaf:mbox_sha1sum>
+      <foaf:homepage rdf:resource="http://network.wexample.com"/>
+      <foaf:depiction rdf:resource="http://network.wexample.com/mypic.jpg"/>
+      <foaf:phone rdf:resource="tel:652626602"/></foaf:Person>
+      </rdf:RDF>';
     exit;
   }
   else {
@@ -119,6 +143,13 @@ if (isset($_GET['show'])) {
   <style>
     input.error {
       border-color: red;
+    }
+    .col-profile {
+      text-align: center;
+    }
+    .profile-image {
+      font-size: 30px;
+      color: #DDD;
     }
   </style>
 </head>
@@ -191,7 +222,7 @@ if (isset($_GET['show'])) {
               <a href="." data-toggle="tab">Edit</a>
             </li>
             <li>
-              <a href="?show=json" target="_blank">Json</a>
+              <a href="?show=rdf" target="_blank">RDF</a>
             </li>
             <li>
               <a href="?logout=1">Logout</a>
@@ -203,10 +234,22 @@ if (isset($_GET['show'])) {
 
       <form action="." method="post">
 
-        <div class="col col-sm-2">
-
+        <div class="col col-sm-2 col-profile">
+          <div class="profile-image glyphicon glyphicon-user"></div>
         </div>
         <div class="col col-sm-10">
+          <div class="form-group">
+            <select class="form-control" name="title"
+                    placeholder="First Name"
+                    value="<?php print $userData['firstName']; ?>">
+              <option value="Mr">Mr</option>
+              <option value="Mrs">Mrs</option>
+              <option value="Ms">Ms</option>
+              <option value="Dr">Dr</option>
+              <option value="">- none -</option>
+            </select>
+          </div>
+
           <div class="form-group">
             <input class="form-control" name="firstName"
                    placeholder="First Name"
@@ -218,13 +261,27 @@ if (isset($_GET['show'])) {
                    value="<?php print $userData['name']; ?>">
           </div>
           <div class="form-group">
-          <textarea rows="10" class="form-control" name="description"
-                    placeholder="Description"><?php print $userData['description']; ?></textarea>
+            <input class="form-control" name="nickname"
+                   placeholder="Nickname"
+                   value="<?php print $userData['nickname']; ?>">
           </div>
 
           <div class="form-group">
-          <textarea rows="5" class="form-control" name="interests"
-                    placeholder="Interests"><?php print $userData['interests']; ?></textarea>
+            <input class="form-control" name="email"
+                   placeholder="Email"
+                   value="<?php print $userData['email']; ?>">
+          </div>
+
+          <div class="form-group">
+            <input class="form-control" name="homepage"
+                   placeholder="Homepage http://..."
+                   value="<?php print $userData['homepage']; ?>">
+          </div>
+
+          <div class="form-group">
+            <input class="form-control" name="phone"
+                   placeholder="Phone number"
+                   value="<?php print $userData['phone']; ?>">
           </div>
 
           <div class="form-group">
