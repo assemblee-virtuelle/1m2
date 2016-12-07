@@ -24,7 +24,7 @@ else {
     // Allow to keep app sync to git repository.
     file_put_contents($configFile, '<?php $config = array(\'userPassword\' => \'' . md5($_POST['passwordSetValue']) . '\'); ?>');
     // Move to the current page.
-    header('location:');
+    header('location:?message=passwordCreated');
   }
 }
 
@@ -34,6 +34,14 @@ else {
 <head>
   <meta charset="UTF-8">
   <title>1m2</title>
+  <?php if (isset($_GET['message']) && $_GET['message'] === 'passwordCreated'): ?>
+    <script>
+      // Wait for page load.
+      window.addEventListener('DOMContentLoaded', function () {
+        alert('Your password have been saved, welcome to your first meter square!');
+      });
+    </script>
+  <?php endif; ?>
 </head>
 <body>
 <?php if (!$userLogged): ?>
