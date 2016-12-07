@@ -7,3 +7,8 @@ Install
 =======
 
 Download index.php to your server or copy its content, and follow the steps.
+
+Password reset
+==============
+
+Remove the config.php file and create a new password.
