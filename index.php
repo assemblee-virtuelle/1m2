@@ -82,6 +82,11 @@ if (file_exists($dataFile)) {
   }
 }
 
+if (isset($_GET['show'])) {
+  echo file_get_contents($dataFile);
+  exit;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -125,7 +130,6 @@ if (file_exists($dataFile)) {
   <nav>
     <a href=".">Edit</a>
     <a href=".?show=json">Json</a>
-    <a href=".?show=turtle">Turtle</a>
   </nav>
   <form action="." method="post">
     <input name="firstName" placeholder="First Name"
