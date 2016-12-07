@@ -46,17 +46,17 @@ else {
 <body>
 <?php if (!$userLogged): ?>
   <?php if (!$userPassword) : ?>
-    <form action="" method="post">
+    <form action="." method="post">
       <div>Hello, you are the first user on this site.</div>
       <label for="passwordSetValue">Create your password</label>
       <input id="passwordSetValue" name="passwordSetValue" type="password"/>
       <input name="passwordSetSubmit" type="submit"/>
     </form>
   <?php else: ?>
-    <form action="" method="post">
+    <form action="." method="post">
       <div>A user has created an account to this site.</div>
-      <label for="passwordSetValue">Enter your password</label>
-      <input id="passwordSetValue" name="passwordSetValue" type="password"/>
+      <label for="passwordLoginValue">Enter your password</label>
+      <input id="passwordLoginValue" name="passwordLoginValue" type="password"/>
       <input type="submit"/>
     </form>
   <?php endif; ?>
