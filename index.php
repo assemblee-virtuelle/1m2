@@ -85,8 +85,13 @@ if (file_exists($dataFile)) {
 
 // Show data.
 if (isset($_GET['show'])) {
-  echo file_get_contents($dataFile);
-  exit;
+  if (file_exists($dataFile)) {
+    echo file_get_contents($dataFile);
+    exit;
+  }
+  else {
+    $message = 'Please fill up your form to make your profile available.';
+  }
 }
 
 ?>
@@ -120,7 +125,7 @@ if (isset($_GET['show'])) {
 <body>
 <div class="container">
   <div class="row">
-    <h1>Welcome</h1>
+    <h1>First digital square meter</h1>
     <?php if ($message): ?>
       <div class="alert alert-info" role="alert">
         <?php print $message; ?>
@@ -178,21 +183,56 @@ if (isset($_GET['show'])) {
         </form>
       <?php endif; ?>
     <?php else: ?>
-      <div>You are now logged | <a href="?logout=1">Logout</a></div>
-      <nav>
-        <a href="." target="_blank">Edit</a>
-        <a href=".?show=json" target="_blank">Json</a>
-      </nav>
+
+      <div id="exTab1" class="container">
+        <div class="row">
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="." data-toggle="tab">Edit</a>
+            </li>
+            <li>
+              <a href="?show=json" target="_blank">Json</a>
+            </li>
+            <li>
+              <a href="?logout=1">Logout</a>
+            </li>
+          </ul>
+        </div>
+        <br/>
+      </div>
+
       <form action="." method="post">
-        <input name="firstName" placeholder="First Name"
-               value="<?php print $userData['firstName']; ?>">
-        <input name="name" placeholder="Name"
-               value="<?php print $userData['name']; ?>">
-    <textarea name="description"
-              placeholder="Description"><?php print $userData['description']; ?></textarea>
-    <textarea name="interests"
-              placeholder="Interests"><?php print $userData['interests']; ?></textarea>
-        <input type="submit" name="editDataSubmit" value="Save"/>
+
+        <div class="col col-sm-2">
+
+        </div>
+        <div class="col col-sm-10">
+          <div class="form-group">
+            <input class="form-control" name="firstName"
+                   placeholder="First Name"
+                   value="<?php print $userData['firstName']; ?>">
+          </div>
+
+          <div class="form-group">
+            <input class="form-control" name="name" placeholder="Name"
+                   value="<?php print $userData['name']; ?>">
+          </div>
+          <div class="form-group">
+          <textarea rows="10" class="form-control" name="description"
+                    placeholder="Description"><?php print $userData['description']; ?></textarea>
+          </div>
+
+          <div class="form-group">
+          <textarea rows="5" class="form-control" name="interests"
+                    placeholder="Interests"><?php print $userData['interests']; ?></textarea>
+          </div>
+
+          <div class="form-group">
+            <input class="btn btn-default" type="submit" name="editDataSubmit"
+                   value="Save"/>
+          </div>
+        </div>
+
       </form>
     <?php endif; ?>
   </div>
