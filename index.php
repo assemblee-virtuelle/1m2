@@ -94,12 +94,6 @@ if (isset($_GET['show'])) {
       xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
       xmlns:foaf="http://xmlns.com/foaf/0.1/"
       xmlns:admin="http://webns.net/mvcb/">
-      <foaf:PersonalProfileDocument rdf:about="">
-        <foaf:maker rdf:resource="#me"/>
-        <foaf:primaryTopic rdf:resource="#me"/>
-        <admin:generatorAgent rdf:resource="http://www.ldodds.com/foaf/foaf-a-matic"/>
-        <admin:errorReportsTo rdf:resource="mailto:leigh@ldodds.com"/>
-      </foaf:PersonalProfileDocument>
       <foaf:Person rdf:ID="me">
       <foaf:name>' . $userData['firstName'] . ' ' . $userData['name'] . '</foaf:name>
       <foaf:title>' . $userData['title'] . '</foaf:title>
