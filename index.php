@@ -111,14 +111,6 @@ if (isset($_GET['show'])) {
     src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
     integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
     crossorigin="anonymous"></script>
-  <?php if ($message): ?>
-    <script>
-      // Wait for page load.
-      window.addEventListener('DOMContentLoaded', function () {
-        alert("<?php print $message; ?>");
-      });
-    </script>
-  <?php endif; ?>
   <style>
     input.error {
       border-color: red;
@@ -128,8 +120,13 @@ if (isset($_GET['show'])) {
 <body>
 <div class="container">
   <div class="row">
+    <h1>Welcome</h1>
+    <?php if ($message): ?>
+      <div class="alert alert-info" role="alert">
+        <?php print $message; ?>
+      </div>
+    <?php endif; ?>
     <?php if (!$userLogged): ?>
-      <h1>Welcome</h1>
       <?php if (!$userPassword) : ?>
         <form action="." method="post">
           <div class="alert alert-info" role="alert">You are the first
