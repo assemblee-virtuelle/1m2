@@ -2,6 +2,7 @@
 
 // Start with a single user.
 $configFile         = 'config.php';
+$dataFile           = 'data.json';
 $userPassword       = FALSE;
 $multiUsers         = FALSE;
 $userExists         = FALSE;
@@ -9,20 +10,26 @@ $userLogged         = FALSE;
 $config             = FALSE;
 $message            = FALSE;
 $loginPasswordError = FALSE;
+$userData           = array(
+  'name'        => '',
+  'firstName'   => '',
+  'description' => '',
+  'interests'   => ''
+);
 
 // User exists.
 if (file_exists($configFile)) {
   require_once $configFile;
   $userExists   = TRUE;
   $userPassword = $config['userPassword'];
+  // Log is saved into session.
+  session_start();
   // Logout
   if (isset($_GET['logout'])) {
     session_destroy();
-    header('location:');
+    header('location:.');
     exit;
   }
-  // Log is saved into session.
-  session_start();
   // User as just submitted login form.
   if (isset($_POST['passwordLoginValue'])) {
     // User has been logged.
@@ -41,6 +48,17 @@ if (file_exists($configFile)) {
   // User is logged.
   if (isset($_SESSION['userLogged']) && $_SESSION['userLogged']) {
     $userLogged = TRUE;
+    // Form submitted.
+    if (isset($_POST['editDataSubmit'])) {
+      $userData = array(
+        'firstName'   => $_POST['firstName'],
+        'name'        => $_POST['name'],
+        'description' => $_POST['description'],
+        'interests'   => $_POST['interests']
+      );
+      file_put_contents($dataFile, json_encode($userData, JSON_OBJECT_AS_ARRAY));
+      $message = 'Data updated.';
+    }
   }
 }
 // User does not exists.
@@ -50,8 +68,18 @@ else if (isset($_POST['passwordSetSubmit'])) {
   // Allow to keep app sync to git repository.
   file_put_contents($configFile, '<?php $config = array(\'userPassword\' => \'' . md5($_POST['passwordSetValue']) . '\'); ?>');
   // Move to the current page.
-  header('location:?message=passwordCreated');
+  header('location:.?message=passwordCreated');
   exit;
+}
+
+// Load data.
+if (file_exists($dataFile)) {
+  $data = json_decode(file_get_contents($dataFile), JSON_OBJECT_AS_ARRAY);
+  foreach ($userData as $key => $value) {
+    if (isset($data[$key])) {
+      $userData[$key] = $data[$key];
+    }
+  }
 }
 
 ?>
@@ -99,11 +127,17 @@ else if (isset($_POST['passwordSetSubmit'])) {
     <a href=".?show=json">Json</a>
     <a href=".?show=turtle">Turtle</a>
   </nav>
-  <input name="firstName" placeholder="First Name">
-  <input name="name" placeholder="Name">
-  <textarea name="description" placeholder="Description"></textarea>
-  <textarea name="interests" placeholder="Interests"></textarea>
-  <input type="submit" value="Save"/>
+  <form action="." method="post">
+    <input name="firstName" placeholder="First Name"
+           value="<?php print $userData['firstName']; ?>">
+    <input name="name" placeholder="Name"
+           value="<?php print $userData['name']; ?>">
+    <textarea name="description"
+              placeholder="Description"><?php print $userData['description']; ?></textarea>
+    <textarea name="interests"
+              placeholder="Interests"><?php print $userData['interests']; ?></textarea>
+    <input type="submit" name="editDataSubmit" value="Save"/>
+  </form>
 <?php endif; ?>
 </body>
 </html>
