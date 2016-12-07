@@ -6,4 +6,4 @@ Your first 1m2 in the semantic web.
 Install
 =======
 
-Copy index.php to your server, and follow the steps.
+Download index.php to your server or copy its content, and follow the steps.
