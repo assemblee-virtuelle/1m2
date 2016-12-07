@@ -15,19 +15,32 @@ if (file_exists($configFile)) {
   require_once $configFile;
   $userExists   = TRUE;
   $userPassword = $config['userPassword'];
+  // Logout
+  if (isset($_GET['logout'])) {
+    session_destroy();
+    header('location:');
+    exit;
+  }
+  // Log is saved into session.
+  session_start();
   // User as just submitted login form.
   if (isset($_POST['passwordLoginValue'])) {
+    // User has been logged.
     if (md5($_POST['passwordLoginValue']) === $userPassword) {
-      $userLogged = TRUE;
+      $_SESSION['userLogged'] = TRUE;
     }
     else {
       $message            = 'Your password has not been recognized.';
       $loginPasswordError = TRUE;
     }
   }
-  // Messages management.
+  // Messages management when user has just created his password.
   else if (isset($_GET['message']) && $_GET['message'] === 'passwordCreated') {
     $message = 'Your password have been saved, welcome to your first meter square!';
+  }
+  // User is logged.
+  if (isset($_SESSION['userLogged']) && $_SESSION['userLogged']) {
+    $userLogged = TRUE;
   }
 }
 // User does not exists.
@@ -38,6 +51,7 @@ else if (isset($_POST['passwordSetSubmit'])) {
   file_put_contents($configFile, '<?php $config = array(\'userPassword\' => \'' . md5($_POST['passwordSetValue']) . '\'); ?>');
   // Move to the current page.
   header('location:?message=passwordCreated');
+  exit;
 }
 
 ?>
@@ -79,7 +93,17 @@ else if (isset($_POST['passwordSetSubmit'])) {
     </form>
   <?php endif; ?>
 <?php else: ?>
-
+  <div>You are now logged | <a href="?logout=1">Logout</a></div>
+  <nav>
+    <a href=".">Edit</a>
+    <a href=".?show=json">Json</a>
+    <a href=".?show=turtle">Turtle</a>
+  </nav>
+  <input name="firstName" placeholder="First Name">
+  <input name="name" placeholder="Name">
+  <textarea name="description" placeholder="Description"></textarea>
+  <textarea name="interests" placeholder="Interests"></textarea>
+  <input type="submit" value="Save"/>
 <?php endif; ?>
 </body>
 </html>
