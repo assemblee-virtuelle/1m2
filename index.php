@@ -97,8 +97,8 @@ if (isset($_GET['show'])) {
       <foaf:Person rdf:ID="me">
       <foaf:name>' . $userData['firstName'] . ' ' . $userData['name'] . '</foaf:name>
       <foaf:title>' . $userData['title'] . '</foaf:title>
-      <foaf:givenname>' . $userData['firstName'] . '</foaf:givenname>
-      <foaf:family_name>' . $userData['name'] . '</foaf:family_name>
+      <foaf:givenName>' . $userData['firstName'] . '</foaf:givenName>
+      <foaf:familyName>' . $userData['name'] . '</foaf:familyName>
       <foaf:nick>' . $userData['nickname'] . '</foaf:nick>
       <foaf:mbox_sha1sum>' . sha1($userData['email']) . '</foaf:mbox_sha1sum>
       <foaf:homepage rdf:resource="http://network.wexample.com"/>
