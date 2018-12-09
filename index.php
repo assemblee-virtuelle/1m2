@@ -88,6 +88,8 @@ if (file_exists($dataFile)) {
 
 // Show data.
 if (isset($_GET['show'])) {
+  // Set HTTP headers.
+  header('Content-Type: application/rdf+xml');
   if (file_exists($dataFile)) {
     print '<rdf:RDF
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
